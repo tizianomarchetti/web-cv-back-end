@@ -31,9 +31,12 @@ public class PdfServiceImpl implements PdfService {
 
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filesPath
 				+ "CV Tiziano Marchetti_" + lang + ".pdf");
+		log.info(inputStream != null ? inputStream.toString() : "inputStream is null");
 		try {
 			// Crea un file temporaneo
 			Path tempFile = Files.createTempFile("tempFile", ".pdf");
+
+			log.info(tempFile.toString());
 
 			if (inputStream != null) {
 				// Copia i byte dall'InputStream nel file temporaneo
