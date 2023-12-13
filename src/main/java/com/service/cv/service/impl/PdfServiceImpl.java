@@ -30,10 +30,10 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public Resource getPdf(String lang) {
 		try {
-			URI uri = new ClassPathResource(filesPath
-					+ "CV Tiziano Marchetti_" + lang + ".pdf").getFile().toURI();
-			log.info(uri.toString());
-			Resource resource = new UrlResource(uri);
+			Resource resource = new ClassPathResource(filesPath
+					+ "CV Tiziano Marchetti_" + lang + ".pdf");
+			log.info(resource.getURI().toString());
+			log.info(resource.getURL().toString());
 
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
