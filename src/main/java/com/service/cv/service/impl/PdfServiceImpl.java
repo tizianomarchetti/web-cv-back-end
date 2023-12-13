@@ -29,22 +29,20 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public Resource getPdf(String lang) {
 
-		InputStream inputStream = ClassLoader.getSystemResourceAsStream(filesPath
+		Resource resource = new ClassPathResource(filesPath
 				+ "CV Tiziano Marchetti_" + lang + ".pdf");
-		log.info(inputStream != null ? inputStream.toString() : "inputStream is null");
 		try {
+			log.info(resource.getInputStream().toString());
 			// Crea un file temporaneo
 			Path tempFile = Files.createTempFile("tempFile", ".pdf");
 
 			log.info(tempFile.toString());
 
-			if (inputStream != null) {
-				// Copia i byte dall'InputStream nel file temporaneo
-				Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+			// Copia i byte dall'InputStream nel file temporaneo
+			Files.copy(resource.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
 
-				// Restituisci il percorso del file temporaneo
-				return new UrlResource(tempFile.toUri());
-			}
+			// Restituisci il percorso del file temporaneo
+			return new UrlResource(tempFile.toUri());
 
 		} catch (IOException e) {
 			// Gestisci eventuali eccezioni durante la lettura o la creazione del file temporaneo
@@ -62,6 +60,6 @@ public class PdfServiceImpl implements PdfService {
 //			} else {
 //				throw new RuntimeException("Could not read the file!");
 //			}
-		return null;
+//		return null;
 	}
 }
