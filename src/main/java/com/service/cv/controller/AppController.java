@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @RestController
 @CrossOrigin
@@ -22,7 +20,7 @@ public class AppController {
 	private PdfService pdfService;
 
 	@GetMapping("/getCvPdf/{lang}")
-	public ResponseEntity<Resource> getPdf(@PathVariable String lang) {
+	public ResponseEntity<Resource> getPdf(@PathVariable String lang) throws IOException {
 		Resource file = pdfService.getPdf(lang);
 //		Path path = file.getFile().toPath();
 
