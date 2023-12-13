@@ -23,7 +23,7 @@ public class AppController {
 
 	@GetMapping("/getCvPdf/{lang}")
 	public ResponseEntity<Resource> getPdf(@PathVariable String lang) throws IOException {
-		Resource file = pdfService.getPdf(lang.toUpperCase());
+		Resource file = pdfService.getPdf(lang);
 		Path path = file.getFile().toPath();
 
 		return ResponseEntity.ok()
