@@ -29,7 +29,7 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public Resource getPdf(String lang) {
 
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filesPath
+		InputStream inputStream = ClassLoader.getSystemResourceAsStream(filesPath
 				+ "CV Tiziano Marchetti_" + lang + ".pdf");
 		log.info(inputStream != null ? inputStream.toString() : "inputStream is null");
 		try {
