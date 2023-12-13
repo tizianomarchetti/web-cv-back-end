@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.*;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -16,8 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 @Service
@@ -29,17 +28,33 @@ public class PdfServiceImpl implements PdfService {
 
 	@Override
 	public Resource getPdf(String lang) {
-		try {
-			Resource resource = new ClassPathResource(filesPath
-					+ "CV Tiziano Marchetti_" + lang + ".pdf");
-			log.info(resource.getURI().toString());
-			log.info(resource.getURL().toString());
 
-			if (resource.exists() || resource.isReadable()) {
-				return resource;
-			} else {
-				throw new RuntimeException("Could not read the file!");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filesPath
+				+ "CV Tiziano Marchetti_" + lang + ".pdf");
+		try {
+			// Crea un file temporaneo
+			Path tempFile = Files.createTempFile("tempFile", ".pdf");
+
+			if (inputStream != null) {
+				// Copia i byte dall'InputStream nel file temporaneo
+				Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+				// Restituisci il percorso del file temporaneo
+				Resource resource = new UrlResource(tempFile.toUri());
+
+				log.info(resource.getURI().toString());
+				log.info(resource.getURL().toString());
+				if (resource.exists() || resource.isReadable()) {
+					return resource;
+				} else {
+					throw new RuntimeException("Could not read the file!");
+				}
 			}
+
+		} catch (IOException e) {
+			// Gestisci eventuali eccezioni durante la lettura o la creazione del file temporaneo
+			throw new RuntimeException("Errore durante la manipolazione del file temporaneo", e);
+		}
 
 //			Path file = Paths.get(filesPath).resolve("CV Tiziano Marchetti_" + lang + ".pdf");
 //			Resource resource = new UrlResource(file.toUri());
@@ -52,9 +67,6 @@ public class PdfServiceImpl implements PdfService {
 //			} else {
 //				throw new RuntimeException("Could not read the file!");
 //			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 }
