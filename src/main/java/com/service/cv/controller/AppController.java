@@ -4,6 +4,7 @@ import com.service.cv.service.PdfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +22,12 @@ public class AppController {
 	private PdfService pdfService;
 
 	@GetMapping("/getCvPdf/{lang}")
-	public ResponseEntity<Resource> getPdf(@PathVariable String lang) throws IOException {
+	public ResponseEntity<Resource> getPdf(@PathVariable String lang) {
 		Resource file = pdfService.getPdf(lang);
-		Path path = file.getFile().toPath();
+//		Path path = file.getFile().toPath();
 
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(path))
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
 				.header(HttpHeaders.CONTENT_DISPOSITION,
 						"attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);

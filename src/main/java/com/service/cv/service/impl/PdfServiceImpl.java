@@ -40,15 +40,7 @@ public class PdfServiceImpl implements PdfService {
 				Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
 
 				// Restituisci il percorso del file temporaneo
-				Resource resource = new UrlResource(tempFile.toUri());
-
-				log.info(resource.getURI().toString());
-				log.info(resource.getURL().toString());
-				if (resource.exists() || resource.isReadable()) {
-					return resource;
-				} else {
-					throw new RuntimeException("Could not read the file!");
-				}
+				return new UrlResource(tempFile.toUri());
 			}
 
 		} catch (IOException e) {
